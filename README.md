@@ -183,3 +183,12 @@ Initial provisioning of resources to enable infrastructue-as-code automation req
 
 1. Trigger a `main` branch workflow to apply the remaining resources via GitHub Actions
 
+## Contributing
+
+### Settings
+
+The GitHub repo settings for this repo are defined as code using the [Probot settings GitHub App](https://probot.github.io/apps/settings/). Settings values are defined in the `.github/settings.yml` file. Enabling automation of settings via this file requires installing the app.
+
+### CI/CD in forks
+
+Forks of the repository will not have access to the state bucket via CI/CD, thanks to the [google_iam_workload_identity_pool_provider attribute_condition (defined in `main.tf`)](https://github.com/rcwbr/gha-gcp-opentofu/blob/3b7c801608849ec18ef72225c26f0f57ad84477f/main.tf#L41). Forks should test a `plan` and `apply` (via Actions) against a new project, then open a PR for which CI/CD will fail. Repo contributors may then reconfigure the PR to target an unprotected branch to bring the changes into the repo, from which the final PR to `main` may be opened.
