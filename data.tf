@@ -14,7 +14,7 @@ data "google_iam_policy" "github_actions_plan_sa_bindings" {
 data "google_iam_policy" "github_actions_apply_sa_bindings" {
   // Allow the apply identity to act as the service account
   binding {
-    role = "roles/iam.serviceAccountUser"
+    role = "roles/iam.workloadIdentityUser"
 
     members = [local.github_actions_apply_identity]
   }
