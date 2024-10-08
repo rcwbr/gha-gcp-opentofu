@@ -92,6 +92,45 @@ inputs = {
 }
 ```
 
+### GitHub Actions usage
+
+To automate management of the module resources via GitHub Actions, include [Terragrunt actions](https://github.com/gruntwork-io/terragrunt-action) (assuming [module usage via Terragrunt as recommended](#terragrunt-usage)) in your workflow. For example, to include a `terragrunt plan` using the module: 
+
+```yaml
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Terragrunt plan
+        uses: gruntwork-io/terragrunt-action@v2.1.4
+        with:
+          tofu_version: 1.8.2
+          tg_version: 0.67.10
+          tg_dir: .infra
+          tg_command: plan
+```
+
+Terragrunt configuration as per the recommended usage expects the `GOOGLE_OAUTH_ACCESS_TOKEN` environment variable in order to authenticate to GCP. To use the resources defined in the module to authenticate the workflow, first define a step to authenticate to GCP using the [auth action](https://github.com/google-github-actions/auth?tab=readme-ov-file#direct-wif). `workload_identity_provider` for the auth action must be set to the `github_actions_wif_provider_id` output, and `service_account` to `github_actions_plan_sa_email` (outputs can be read from the module [Initial provisioning](#initial-provisioning)). For example:
+
+```yaml
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+        uses: google-github-actions/auth@v2.1.5
+        with:
+          export_environment_variables: false
+          create_credentials_file: false
+          token_format: access_token
+          workload_identity_provider: projects/918666231212/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+          service_account: github-actions-plan@gha-gcp-opentofu.iam.gserviceaccount.com
+      - name: Terragrunt plan
+      ...
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+```
 
 ### Module inputs
 
