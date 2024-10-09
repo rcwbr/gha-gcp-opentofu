@@ -8,6 +8,12 @@ data "google_iam_policy" "github_actions_plan_sa_bindings" {
     role    = "roles/iam.workloadIdentityUser"
     members = [local.github_actions_plan_identity]
   }
+
+  // Allow the apply account to administer the service account
+  binding {
+    role    = "roles/iam.serviceAccountAdmin"
+    members = [google_service_account.github_actions_apply.member]
+  }
 }
 
 data "google_iam_policy" "github_actions_apply_sa_bindings" {
