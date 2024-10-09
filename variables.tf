@@ -2,6 +2,7 @@ variable "apply_action_project_roles" {
   type = list(string)
   default = [
     "roles/iam.serviceAccountAdmin",
+    "roles/iam.roleAdmin",
     "roles/iam.workloadIdentityPoolAdmin",
     "roles/resourcemanager.projectIamAdmin",
     "roles/serviceusage.serviceUsageAdmin",
