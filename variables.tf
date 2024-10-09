@@ -2,8 +2,10 @@ variable "apply_action_project_roles" {
   type = list(string)
   default = [
     "roles/iam.serviceAccountAdmin",
-    "roles/storage.admin",
-    "roles/iam.workloadIdentityPoolAdmin"
+    "roles/iam.workloadIdentityPoolAdmin",
+    "roles/resourcemanager.projectIamAdmin",
+    "roles/serviceusage.serviceUsageAdmin",
+    "roles/storage.admin"
   ]
   description = "The list of project-wide roles to grant apply actions"
 }
