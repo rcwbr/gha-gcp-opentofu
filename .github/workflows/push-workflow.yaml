@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
-      - id: auth
+      - id: plan-auth
         name: GCP auth
         uses: google-github-actions/auth@v2.1.5
         with:
@@ -55,7 +55,7 @@ jobs:
           tg_dir: ${{ env.working_dir }}
           tg_command: plan
         env:
-          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.plan-auth.outputs.access_token }}
 
   apply:
     runs-on: ubuntu-24.04
@@ -66,7 +66,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
-      - id: auth
+      - id: apply-auth
         name: GCP auth
         uses: google-github-actions/auth@v2.1.5
         with:
@@ -83,4 +83,4 @@ jobs:
           tg_dir: ${{ env.working_dir }}
           tg_command: 'apply'
         env:
-          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.apply-auth.outputs.access_token }}
