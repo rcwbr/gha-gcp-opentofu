@@ -26,7 +26,7 @@ repository:
 #       - type: update
 
 rulesets:
-  - name: prevent destruction of the default branch
+  - name: Basic default branch protection
     target: branch
     enforcement: active
     conditions:
@@ -37,24 +37,40 @@ rulesets:
     rules:
       - type: deletion
       - type: non_fast_forward
+  - name: Default branch checks enforcement
+    target: branch
+    enforcement: active
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"
+        exclude: []
+    rules:
+      - type: required_status_checks
+        parameters:
+          strict_required_status_checks_policy: true
+          required_status_checks:
+            # Require a passing check from GitHub Actions
+            - context: "GitHub Actions"
+              integration_id: 15368
 
-branches:
-  - name: main
-    protection:
-      # required_pull_request_reviews:
-      #   required_approving_review_count: 1
-      #   dismiss_stale_reviews: true
-      #   require_code_owner_reviews: true
-      #   bypass_pull_request_allowances:
-      #     users: [rcwbr]
-      # required_linear_history: true
-      # required_conversation_resolution: true
-      # required_status_checks:
-      #   strict: true
-      #   checks:
-      #     # Require a passing check from GitHub Actions
-      #     - context: "GitHub Actions"
-      #       id: 15368
-      enforce_admins: true
+# branches:
+#   - name: main
+#     protection:
+#       required_pull_request_reviews:
+#         required_approving_review_count: 1
+#         dismiss_stale_reviews: true
+#         require_code_owner_reviews: true
+#         bypass_pull_request_allowances:
+#           users: [rcwbr]
+#       required_linear_history: true
+#       required_conversation_resolution: true
+#       required_status_checks:
+#         strict: true
+#         checks:
+#           # Require a passing check from GitHub Actions
+#           - context: "GitHub Actions"
+#             id: 15368
+#       enforce_admins: true
 
 collaborators: [] # No collaborators defined
