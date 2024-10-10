@@ -26,7 +26,7 @@ repository:
 #       - type: update
 
 rulesets:
-  - name: Basic default branch protection
+  - name: Default branch protections
     target: branch
     enforcement: active
     conditions:
@@ -36,16 +36,9 @@ rulesets:
         exclude: []
     rules:
       - type: deletion
+      # Require PRs to be up-to-date
       - type: non_fast_forward
-  - name: Default branch checks enforcement
-    target: branch
-    enforcement: active
-    conditions:
-      ref_name:
-        include:
-          - "~DEFAULT_BRANCH"
-        exclude: []
-    rules:
+      # Require passing CI
       - type: required_status_checks
         parameters:
           strict_required_status_checks_policy: true
