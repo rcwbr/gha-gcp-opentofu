@@ -11,37 +11,37 @@ repository:
   # Clean up branches when PRs merge
   delete_branch_on_merge: true
 
-rulesets:
-  - name: Tags rules
-    target: tags
-    enforcement: active
-    conditions:
-      ref_name:
-        include:
-          - "*"
-        exclude: []
-    rules:
-      - type: creation
-      - type: deletion
-      - type: update
+# rulesets:
+#   - name: Tags rules
+#     target: tags
+#     enforcement: active
+#     conditions:
+#       ref_name:
+#         include:
+#           - "*"
+#         exclude: []
+#     rules:
+#       - type: creation
+#       - type: deletion
+#       - type: update
 
 branches:
   - name: main
     protection:
-      required_pull_request_reviews:
-        required_approving_review_count: 1
-        dismiss_stale_reviews: true
-        require_code_owner_reviews: true
-        bypass_pull_request_allowances:
-          users: [rcwbr]
-      required_linear_history: true
-      required_conversation_resolution: true
-      required_status_checks:
-        strict: true
-        checks:
-          # Require a passing check from GitHub Actions
-          - context: "GitHub Actions"
-            id: 15368
+      # required_pull_request_reviews:
+      #   required_approving_review_count: 1
+      #   dismiss_stale_reviews: true
+      #   require_code_owner_reviews: true
+      #   bypass_pull_request_allowances:
+      #     users: [rcwbr]
+      # required_linear_history: true
+      # required_conversation_resolution: true
+      # required_status_checks:
+      #   strict: true
+      #   checks:
+      #     # Require a passing check from GitHub Actions
+      #     - context: "GitHub Actions"
+      #       id: 15368
       enforce_admins: true
 
 collaborators: [] # No collaborators defined
