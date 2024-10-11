@@ -26,7 +26,7 @@ repository:
 #       - type: update
 
 rulesets:
-  - name: Basic default branch protection
+  - name: Default branch protections
     target: branch
     enforcement: active
     conditions:
@@ -36,23 +36,14 @@ rulesets:
         exclude: []
     rules:
       - type: deletion
+      # Require PRs to be up-to-date
       - type: non_fast_forward
-  - name: Default branch checks enforcement
-    target: branch
-    enforcement: active
-    conditions:
-      ref_name:
-        include:
-          - "~DEFAULT_BRANCH"
-        exclude: []
-    rules:
-      - type: required_status_checks
+      # Require passing CI
+      - type: workflows
         parameters:
-          strict_required_status_checks_policy: true
-          required_status_checks:
-            # Require a passing check from GitHub Actions
-            - context: "GitHub Actions"
-              integration_id: 15368
+          workflows:
+            path: .github/workflows/push-workflow.yaml
+            repository_id: 863557021
 
 # branches:
 #   - name: main
