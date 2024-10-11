@@ -39,13 +39,11 @@ rulesets:
       # Require PRs to be up-to-date
       - type: non_fast_forward
       # Require passing CI
-      - type: required_status_checks
+      - type: workflows
         parameters:
-          strict_required_status_checks_policy: true
-          required_status_checks:
-            # Require a passing check from GitHub Actions
-            - context: "GitHub Actions"
-              integration_id: 15368
+          workflows:
+            path: .github/workflows/push-workflow.yaml
+            repository_id: 863557021
 
 # branches:
 #   - name: main
