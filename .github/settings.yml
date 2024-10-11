@@ -36,14 +36,22 @@ rulesets:
         exclude: []
     rules:
       - type: deletion
+      # Require PRs
+      - type: pull_request
+        parameters:
+          dismiss_stale_reviews_on_push: true
+          require_code_owner_review: true
+          required_review_thread_resolution: true
+          required_approving_review_count: 1
       # Require PRs to be up-to-date
       - type: non_fast_forward
       # Require passing CI
-      # - type: workflows
-      #   parameters:
-      #     workflows:
-      #       path: .github/workflows/push-workflow.yaml
-      #       repository_id: 863557021
+      - type: workflows
+        parameters:
+          workflows:
+            - path: .github/workflows/push-workflow.yaml
+              # gha-gcp-opentofu repo ID
+              repository_id: 863557021
 
 # branches:
 #   - name: main
