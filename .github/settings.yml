@@ -36,7 +36,7 @@ rulesets:
     rules:
       - type: creation
       - type: deletion
-      - type: required_linear_history
+      - type: non_fast_forward
       - type: pull_request
         parameters:
           dismiss_stale_reviews_on_push: true
