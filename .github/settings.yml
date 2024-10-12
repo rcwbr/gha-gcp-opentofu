@@ -25,10 +25,10 @@ rulesets:
       - type: creation
       - type: deletion
       - type: update
-  - name: Default branch rules
+  - name: Default branch rules -- universal
     target: branch
     enforcement: active
-    conditions:
+    conditions: &default-branch-conditions
       ref_name:
         include:
           - "~DEFAULT_BRANCH"
@@ -37,6 +37,12 @@ rulesets:
       - type: creation
       - type: deletion
       - type: non_fast_forward
+  - name: Default branch rules -- bypass
+    target: branch
+    enforcement: active
+    conditions: *default-branch-conditions
+    bypass_actors: [rcwbr]
+    rules:
       - type: pull_request
         parameters:
           dismiss_stale_reviews_on_push: true
