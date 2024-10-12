@@ -45,7 +45,7 @@ rulesets:
         include:
           - "~DEFAULT_BRANCH"
         exclude: []
-    bypass_actors: [rcwbr]
+    # bypass_actors: [rcwbr]
     rules:
       - type: pull_request
         parameters:
