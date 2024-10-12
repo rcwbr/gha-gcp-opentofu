@@ -54,5 +54,6 @@ rulesets:
           workflows:
             - path: .github/workflows/push-workflow.yaml
               repository_id: 863557021
+              ref: refs/heads/main
 
 collaborators: [] # No collaborators defined
