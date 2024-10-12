@@ -48,5 +48,13 @@ rulesets:
           require_last_push_approval: false
           required_approving_review_count: 1
           required_review_thread_resolution: true
+      # Require workflow job as check to enable PR up-to-date rule
+      - type: required_status_checks
+        parameters:
+          required_status_checks:
+            - context: check-hcl
+              integration_id: 15368 # GitHub Actions integration ID
+          # Requires PR branches to be up-to-date with target
+          strict_required_status_checks_policy: true
 
 collaborators: [] # No collaborators defined
