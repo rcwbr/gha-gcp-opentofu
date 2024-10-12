@@ -28,7 +28,7 @@ rulesets:
   - name: Default branch rules -- universal
     target: branch
     enforcement: active
-    conditions: &default-branch-conditions
+    conditions:
       ref_name:
         include:
           - "~DEFAULT_BRANCH"
@@ -40,7 +40,11 @@ rulesets:
   - name: Default branch rules -- bypass
     target: branch
     enforcement: active
-    conditions: *default-branch-conditions
+    conditions:
+      ref_name:
+        include:
+          - "~DEFAULT_BRANCH"
+        exclude: []
     bypass_actors: [rcwbr]
     rules:
       - type: pull_request
