@@ -45,7 +45,10 @@ rulesets:
         include:
           - "~DEFAULT_BRANCH"
         exclude: []
-    # bypass_actors: [rcwbr]
+    bypass_actors:
+      - actor_id: 5
+        actor_type: RepositoryRole
+        bypass_mode: pull_request
     rules:
       - type: pull_request
         parameters:
