@@ -19,7 +19,7 @@ rulesets:
     conditions:
       ref_name:
         include:
-          - "*"
+          - "~ALL"
         exclude: []
     rules:
       - type: creation
