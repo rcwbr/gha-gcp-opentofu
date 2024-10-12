@@ -19,7 +19,8 @@ rulesets:
     conditions:
       ref_name:
         include:
-          - "~ALL"
+          - "asdfg"
+          # - "~ALL"
         exclude: []
     rules:
       - type: creation
