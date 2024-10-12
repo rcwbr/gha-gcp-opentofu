@@ -11,65 +11,37 @@ repository:
   # Clean up branches when PRs merge
   delete_branch_on_merge: true
 
-# rulesets:
-#   - name: Tags rules
-#     target: tags
-#     enforcement: active
-#     conditions:
-#       ref_name:
-#         include:
-#           - "*"
-#         exclude: []
-#     rules:
-#       - type: creation
-#       - type: deletion
-#       - type: update
-
 rulesets:
-  - name: Default branch protections
-    target: branch
+  - name: Tags rules
+    target: tags
     enforcement: active
     conditions:
       ref_name:
         include:
-          - "~DEFAULT_BRANCH"
+          - "*"
         exclude: []
     rules:
+      - type: creation
       - type: deletion
-      # Require PRs
-      - type: pull_request
-        parameters:
-          dismiss_stale_reviews_on_push: true
-          require_code_owner_review: true
-          required_review_thread_resolution: true
-          required_approving_review_count: 1
-      # Require PRs to be up-to-date
-      - type: non_fast_forward
-      # Require passing CI
-      # - type: workflows
-      #   parameters:
-      #     workflows:
-      #       - path: .github/workflows/push-workflow.yaml
-      #         # gha-gcp-opentofu repo ID
-      #         repository_id: 863557021
+      - type: update
 
-# branches:
-#   - name: main
-#     protection:
-#       required_pull_request_reviews:
-#         required_approving_review_count: 1
-#         dismiss_stale_reviews: true
-#         require_code_owner_reviews: true
-#         bypass_pull_request_allowances:
-#           users: [rcwbr]
-#       required_linear_history: true
-#       required_conversation_resolution: true
-#       required_status_checks:
-#         strict: true
-#         checks:
-#           # Require a passing check from GitHub Actions
-#           - context: "GitHub Actions"
-#             id: 15368
-#       enforce_admins: true
+branches:
+  - name: main
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        bypass_pull_request_allowances:
+          users: [rcwbr]
+      required_linear_history: true
+      required_conversation_resolution: true
+      required_status_checks:
+        strict: true
+        checks:
+          # Require a passing check from GitHub Actions
+          - context: "GitHub Actions"
+            id: 15368
+      enforce_admins: true
 
 collaborators: [] # No collaborators defined
