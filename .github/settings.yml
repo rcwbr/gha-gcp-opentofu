@@ -1,8 +1,7 @@
 repository:
   name: gha-gcp-opentofu
   description: State bucket and access resources for managing OpenTofu IaC via GitHub Actions
-  # default_branch: main TODO restore
-  default_branch: 19-apply-branch-and-tag-protection-settings
+  default_branch: main
 
   # Prevent strategies other than basic merge, as they interfere with conventional changelog version inference
   allow_squash_merge: false
