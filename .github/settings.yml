@@ -23,8 +23,8 @@ rulesets:
         exclude: []
     rules:
       - type: creation
-      - type: deletion
-      - type: update
+      # - type: deletion
+      # - type: update
   - name: Default branch rules -- universal
     target: branch
     enforcement: active
