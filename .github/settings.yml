@@ -55,6 +55,10 @@ rulesets:
           required_status_checks:
             - context: check-hcl
               integration_id: 15368 # GitHub Actions integration ID
+            - context: check-tf
+              integration_id: 15368
+            - context: plan
+              integration_id: 15368
           # Requires PR branches to be up-to-date with target
           strict_required_status_checks_policy: true
 

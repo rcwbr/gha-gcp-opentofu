@@ -7,6 +7,7 @@ env:
   working_dir: .infra/gcp-gha-gcp-opentofu
 
 jobs:
+  # All PR jobs should be listed in required_status_checks https://github.com/rcwbr/gha-gcp-opentofu/blob/1414227daae1579b2c382652e31ca1eba0d18fab/.github/settings.yml#L55
   check-hcl:
     runs-on: ubuntu-24.04
     steps:
