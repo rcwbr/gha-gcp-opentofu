@@ -1,0 +1,37 @@
+name: Main workflow
+on:
+  push:
+    branches:
+      - main
+
+env:
+  tofu_version: 1.8.2
+  tg_version: 0.67.10
+  working_dir: .infra/gcp-gha-gcp-opentofu
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: 'write' # Needed for the google-github-actions/auth step
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - id: apply-auth
+        name: GCP auth
+        uses: google-github-actions/auth@v2.1.5
+        with:
+          export_environment_variables: false
+          create_credentials_file: false
+          token_format: access_token
+          workload_identity_provider: projects/918666231212/locations/global/workloadIdentityPools/github-actions/providers/github-actions
+          service_account: github-actions-apply@gha-gcp-opentofu-7.iam.gserviceaccount.com
+      - name: Apply
+        uses: gruntwork-io/terragrunt-action@v2.1.4
+        with:
+          tofu_version: ${{ env.tofu_version }}
+          tg_version: ${{ env.tg_version }}
+          tg_dir: ${{ env.working_dir }}
+          tg_command: 'apply'
+        env:
+          GOOGLE_OAUTH_ACCESS_TOKEN: ${{ steps.apply-auth.outputs.access_token }}
