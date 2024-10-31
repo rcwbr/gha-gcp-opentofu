@@ -1,8 +1,6 @@
 name: Pull request workflow
 on:
-  pull_request:
-    types:
-      - synchronize
+  pull_request
 
 env:
   tofu_version: 1.8.2
