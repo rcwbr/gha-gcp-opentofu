@@ -12,19 +12,20 @@ repository:
   delete_branch_on_merge: true
 
 rulesets:
-  - name: Tags rules
-    target: tag
-    enforcement: active
-    conditions:
-      ref_name:
-        include:
-          - "~ALL"
-        exclude: []
-    rules:
-      - type: creation
-      - type: deletion
-      - type: non_fast_forward
-      - type: update
+  # TODO re-enable tag protection, see https://github.com/rcwbr/gha-gcp-opentofu/issues/45
+  # - name: Tags rules
+  #   target: tag
+  #   enforcement: active
+  #   conditions:
+  #     ref_name:
+  #       include:
+  #         - "~ALL"
+  #       exclude: []
+  #   rules:
+  #     - type: creation
+  #     - type: deletion
+  #     - type: non_fast_forward
+  #     - type: update
   - name: Default branch rules
     target: branch
     enforcement: active
@@ -58,6 +59,8 @@ rulesets:
             - context: check-tf
               integration_id: 15368
             - context: plan
+              integration_id: 15368
+            - context: Release-it workflow / Release-it dry-run
               integration_id: 15368
           # Requires PR branches to be up-to-date with target
           strict_required_status_checks_policy: true
