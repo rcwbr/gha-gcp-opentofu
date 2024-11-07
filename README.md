@@ -30,10 +30,11 @@ The `.infra/terragrunt.hcl` file configures the state backend:
 ```hcl
 // .infra/terragrunt.hcl
 locals {
-  state_bucket_name = "${local.github_repo}-opentofu-state"
   gcp_project = "gha-gcp-opentofu"
   gcp_region = "US-WEST1"
   github_repo = "rcwbr/gha-gcp-opentofu"
+  // Replace any slashes in github_repo with dashes
+  state_bucket_name = replace("${local.github_repo}-opentofu-state", "/", "-")
 }
 
 remote_state {
@@ -150,10 +151,12 @@ The module reads the following variables as input:
 Initial provisioning of resources to enable infrastructue-as-code automation requires the following steps:
 
 1. Prepare a GCS project
+1. `export` the project name to `GCP_PROJECT_NAME`
+1. `export` the path to the directory that contains your Terragrunt configuration for this module as `GHA_GCP_TERRAGRUNT_DIR`
 1. Temporarily grant your personal account the Storage Admin for access to the state bucket after `apply`:
 
     ```bash
-    docker run --rm -it --entrypoint bash gcr.io/google.com/cloudsdktool/google-cloud-cli -c 'gcloud auth login && gcloud projects add-iam-policy-binding gha-gcp-opentofu-7 --member="user:eric@eweber.me" --role="roles/storage.admin"'
+    docker run --rm -it -e GCP_PROJECT_NAME --entrypoint bash gcr.io/google.com/cloudsdktool/google-cloud-cli -c 'gcloud auth login && gcloud projects add-iam-policy-binding "$GCP_PROJECT_NAME" --member="user:eric@eweber.me" --role="roles/storage.admin"'
     ```
     1. Follow the instructions provided by the prompts to authenticate the action
 
@@ -167,7 +170,7 @@ Initial provisioning of resources to enable infrastructue-as-code automation req
 1. Plan and apply the provisioning resources from the infrastructure-as-code config:
 
     ```bash
-    docker run -it --rm -v gcp_application_default_token:/token_vol -v $(pwd):/gha-gcp-opentofu -w /gha-gcp-opentofu/.infra/gcp-gha-gcp-opentofu --entrypoint bash devopsinfra/docker-terragrunt:ot-1.8.2-tg-0.67.10 -c 'export GOOGLE_OAUTH_ACCESS_TOKEN=$(cat /token_vol/gcp_application_default_token) && terragrunt plan -target="google_iam_workload_identity_pool.github_actions"  -target="google_project_service.iam" -target="google_project_service.iam_creds" -target="google_project_service.crm" -target="google_iam_workload_identity_pool_provider.github_actions" -target="google_service_account.github_actions_plan" -target="google_service_account_iam_policy.github_actions_plan" -target="google_service_account.github_actions_apply" -target="google_service_account_iam_policy.github_actions_apply" -target="google_project_iam_member.github_actions_apply_sa_admin" -target="google_storage_bucket_iam_policy.state_bucket_policy" -target="google_project_iam_custom_role.plan_project_role" -target="google_project_iam_member.github_actions_plan_sa_custom" -target="google_project_iam_member.github_actions_plan_sa_viewer" && terragrunt apply -target="google_project_service.iam" -target="google_project_service.iam_creds" -target="google_project_service.crm" -target="google_iam_workload_identity_pool.github_actions" -target="google_iam_workload_identity_pool_provider.github_actions" -target="google_service_account.github_actions_plan" -target="google_service_account_iam_policy.github_actions_plan" -target="google_service_account.github_actions_apply" -target="google_service_account_iam_policy.github_actions_apply" -target="google_project_iam_member.github_actions_apply_sa_admin" -target="google_storage_bucket_iam_policy.state_bucket_policy" -target="google_project_iam_custom_role.plan_project_role" -target="google_project_iam_member.github_actions_plan_sa_custom" -target="google_project_iam_member.github_actions_plan_sa_viewer"'
+    docker run -it --rm -v gcp_application_default_token:/token_vol -v $(pwd):/gha-gcp-opentofu -w "/gha-gcp-opentofu/$GHA_GCP_TERRAGRUNT_DIR" --entrypoint bash devopsinfra/docker-terragrunt:ot-1.8.2-tg-0.67.10 -c 'export GOOGLE_OAUTH_ACCESS_TOKEN=$(cat /token_vol/gcp_application_default_token) && terragrunt plan -target="google_iam_workload_identity_pool.github_actions"  -target="google_project_service.iam" -target="google_project_service.iam_creds" -target="google_project_service.crm" -target="google_iam_workload_identity_pool_provider.github_actions" -target="google_service_account.github_actions_plan" -target="google_service_account_iam_policy.github_actions_plan" -target="google_service_account.github_actions_apply" -target="google_service_account_iam_policy.github_actions_apply" -target="google_project_iam_member.github_actions_apply_sa_admin" -target="google_storage_bucket_iam_policy.state_bucket_policy" -target="google_project_iam_custom_role.plan_project_role" -target="google_project_iam_member.github_actions_plan_sa_custom" -target="google_project_iam_member.github_actions_plan_sa_viewer" && terragrunt apply -target="google_project_service.iam" -target="google_project_service.iam_creds" -target="google_project_service.crm" -target="google_iam_workload_identity_pool.github_actions" -target="google_iam_workload_identity_pool_provider.github_actions" -target="google_service_account.github_actions_plan" -target="google_service_account_iam_policy.github_actions_plan" -target="google_service_account.github_actions_apply" -target="google_service_account_iam_policy.github_actions_apply" -target="google_project_iam_member.github_actions_apply_sa_admin" -target="google_storage_bucket_iam_policy.state_bucket_policy" -target="google_project_iam_custom_role.plan_project_role" -target="google_project_iam_member.github_actions_plan_sa_custom" -target="google_project_iam_member.github_actions_plan_sa_viewer"'
     ```
     1. This will prompt with `Remote state GCS bucket opentofu-state does not exist or you don't have permissions to access it. Would you like Terragrunt to create it? (y/n)`. Enter `y`
     1. It will then prompt with `Do you want to perform these actions? OpenTofu will perform the actions described above. Only 'yes' will be accepted to approve.`. Enter `yes`
@@ -177,7 +180,7 @@ Initial provisioning of resources to enable infrastructue-as-code automation req
 1. Clean up the temporary personal account Storage Admin role binding:
 
     ```bash
-    docker run --rm -it --entrypoint bash gcr.io/google.com/cloudsdktool/google-cloud-cli -c 'gcloud auth login && gcloud projects remove-iam-policy-binding gha-gcp-opentofu-7 --member="user:eric@eweber.me" --role="roles/storage.admin"'
+    docker run --rm -it -e GCP_PROJECT_NAME --entrypoint bash gcr.io/google.com/cloudsdktool/google-cloud-cli -c 'gcloud auth login && gcloud projects remove-iam-policy-binding "$GCP_PROJECT_NAME" --member="user:eric@eweber.me" --role="roles/storage.admin"'
     ```
     1. Follow the instructions provided by the prompts to authenticate the action
 
