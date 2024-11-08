@@ -12,20 +12,23 @@ repository:
   delete_branch_on_merge: true
 
 rulesets:
-  # TODO re-enable tag protection, see https://github.com/rcwbr/gha-gcp-opentofu/issues/45
-  # - name: Tags rules
-  #   target: tag
-  #   enforcement: active
-  #   conditions:
-  #     ref_name:
-  #       include:
-  #         - "~ALL"
-  #       exclude: []
-  #   rules:
-  #     - type: creation
-  #     - type: deletion
-  #     - type: non_fast_forward
-  #     - type: update
+  - name: Tags rules
+    target: tag
+    enforcement: active
+    conditions:
+      ref_name:
+        include:
+          - "~ALL"
+        exclude: []
+    bypass_actors:
+      - actor_id: 1050753 # gha-gcp-opentofu release-it app
+        actor_type: Integration
+        bypass_mode: always
+    rules:
+      - type: creation
+      - type: deletion
+      - type: non_fast_forward
+      - type: update
   - name: Default branch rules
     target: branch
     enforcement: active
@@ -66,3 +69,9 @@ rulesets:
           strict_required_status_checks_policy: true
 
 collaborators: [] # No collaborators defined
+
+environments:
+  - name: Repo release # Must match the app-environment workflow input
+    deployment_branch_policy:
+      custom_branches:
+        - main

@@ -2,6 +2,9 @@ name: Release-it workflow
 on: push
 jobs:
   release-it-workflow:
-    uses: rcwbr/release-it-gh-workflow/.github/workflows/release-it-workflow.yaml@0.1.0
-    permissions:
-      contents: write
+    uses: rcwbr/release-it-gh-workflow/.github/workflows/release-it-workflow.yaml@0.2.0
+    with:
+      app-id: 1050753 # gha-gcp-opentofu release-it app
+      app-environment: Repo release
+    secrets:
+      app-secret: ${{ secrets.RELEASE_IT_GITHUB_APP_KEY }} # Secret belonging to the Repo release environment
