@@ -192,6 +192,12 @@ Initial provisioning of resources to enable infrastructue-as-code automation req
 
 The GitHub repo settings for this repo are defined as code using the [Probot settings GitHub App](https://probot.github.io/apps/settings/). Settings values are defined in the `.github/settings.yml` file. Enabling automation of settings via this file requires installing the app.
 
-### CI/CD in forks
+The settings applied are as recommended in the [release-it-gh-workflow usage](https://github.com/rcwbr/release-it-gh-workflow/blob/4dea4eaf328b60f92dab1b5bd2a63daefa85404b/README.md?plain=1#L58), including tag and branch protections, GitHub App and environment authentication, and required checks.
+
+### CI/CD
+
+This repo uses the [release-it-gh-workflow](https://github.com/rcwbr/release-it-gh-workflow), with the conventional-changelog image defined at any given ref, as its automation.
+
+#### CI/CD in forks
 
 Forks of the repository will not have access to the state bucket via CI/CD, thanks to the [google_iam_workload_identity_pool_provider attribute_condition (defined in `main.tf`)](https://github.com/rcwbr/gha-gcp-opentofu/blob/3b7c801608849ec18ef72225c26f0f57ad84477f/main.tf#L41). Forks should test a `plan` and `apply` (via Actions) against a new project, then open a PR for which CI/CD will fail. Repo contributors may then reconfigure the PR to target an unprotected branch to bring the changes into the repo, from which the final PR to `main` may be opened.
